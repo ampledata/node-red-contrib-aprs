@@ -1,0 +1,106 @@
+<!--
+APRS Node-RED Nodes.
+
+Author:: Greg Albrecht W2GMD <oss@undef.net>
+Copyright:: Copyright 2019 Greg Albrecht
+License:: Apache License, Version 2.0
+Source:: https://github.com/ampledata/node-red-contrib-aprs
+-->
+
+<!-- START aprs_config -->
+
+<script type="text/x-red" data-template-name="aprs_config">
+  <div class="form-row">
+    <label for="node-config-input-username"><i class="icon-bookmark"></i> User (Callsign)</label>
+    <input type='text' id="node-config-input-user">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-password"><i class="icon-bookmark"></i> Pass</label>
+    <input type='text' id="node-config-input-pass">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-filter"><i class="icon-bookmark"></i> [Optional] Filter</label>
+    <input type='text' id="node-config-input-filter">
+  </div>
+
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> [Optional] Name</label>
+      <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="aprs_config">
+    <p>Authentication for the APRS-IS.</p>
+    <p>Requires a User (Callsign) & Pass.</p>
+    <p>Optional field for Filter, see <a href="http://www.aprs-is.net/javAPRSFilter.aspx">Server-side Filter Commands</a>.</p>
+
+    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info.</a></p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('aprs_config', {
+        category: 'config',
+        defaults: {
+            filter: { value: '', required: false },
+            name: { value: '', required: false }
+        },
+        credentials: {
+            user: { type: 'text' },
+            pass: { type: 'text' }
+        },
+        label: function () {
+            return this.name || this.credentials.user;
+        },
+        labelStyle: function () {
+            return this.name ? 'node_label_italic' : '';
+        }
+    });
+</script>
+
+<!-- END aprs_config -->
+
+
+<!-- START aprs_rx -->
+
+<script type="text/x-red" data-template-name="aprs_rx">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> [Optional] Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-aprs_config"><i class="icon-tag"></i> Config</label>
+    <input type='text' id="node-input-aprs_config">
+  </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="aprs_rx">
+  <p>
+
+    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info.</a></p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('aprs_rx', {
+        category: 'Ham Radio',
+        defaults: {
+            name: { value: '' },
+            aprs_config: { value: '', type: 'aprs_config' },
+        },
+        color: '#0099ff',
+        inputs: 0,
+        outputs: 1,
+        label: function () {
+            var level_node = RED.nodes.node(this.aprs_config);
+            return this.name || (level_node ? level_node.label() : 'APRS RX');
+        },
+        labelStyle: function () {
+            return this.name ? 'node_label_italic' : '';
+        }
+      }
+    )
+</script>
+
+<!-- END aprs_rx -->
+

@@ -1,0 +1,38 @@
+{
+    "name": "node-red-contrib-aprs",
+    "version": "1.0.0b1",
+    "description": "APRS Node-RED Nodes.",
+    "license": "Apache-2.0",
+    "url": "https://github.com/ampledata/node-red-contrib-aprs",
+    "author": {
+        "name": "Greg Albrecht",
+        "email": "oss@undef.net",
+        "url": "https://ampledata.org"
+    },
+    "homepage": "https://github.com/ampledata/node-red-contrib-aprs",
+    "dependencies": {
+        "node-red": "^1.0.0",
+        "request": "latest",
+        "requestretry": "latest",
+        "tmp": "latest",
+        "ws": "latest",
+        "xmlhttprequest": "latest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ampledata/node-red-contrib-aprs"
+    },
+    "keywords": [
+        "node-red",
+        "aprs"
+    ],
+    "node-red": {
+        "nodes": {
+            "orion": "aprs.js"
+        }
+    },
+    "devDependencies": {
+        "eslint": "^5.12.1",
+        "eslint-config-google": "^0.11.0"
+    }
+}
