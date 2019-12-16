@@ -1,7 +1,7 @@
 {
     "name": "node-red-contrib-aprs",
-    "version": "1.0.0b1",
-    "description": "APRS Node-RED Nodes.",
+    "version": "1.0.0b2",
+    "description": "Node-RED Nodes for connecting to APRS-IS and parsing APRS messages.",
     "license": "Apache-2.0",
     "url": "https://github.com/ampledata/node-red-contrib-aprs",
     "author": {
@@ -12,11 +12,8 @@
     "homepage": "https://github.com/ampledata/node-red-contrib-aprs",
     "dependencies": {
         "node-red": "^1.0.0",
-        "request": "latest",
-        "requestretry": "latest",
-        "tmp": "latest",
         "ws": "latest",
-        "xmlhttprequest": "latest"
+        "aprs-parser": "latest"
     },
     "repository": {
         "type": "git",
@@ -24,11 +21,13 @@
     },
     "keywords": [
         "node-red",
-        "aprs"
+        "aprs",
+        "hamradio",
+        "amateurradio"
     ],
     "node-red": {
         "nodes": {
-            "orion": "aprs.js"
+            "aprs": "aprs.js"
         }
     },
     "devDependencies": {
