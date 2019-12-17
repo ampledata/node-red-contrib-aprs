@@ -11,20 +11,20 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 
 <script type="text/x-red" data-template-name="aprs config">
   <div class="form-row">
-    <label for="node-config-input-username"><i class="icon-bookmark"></i> User (Callsign)</label>
+    <label for="node-config-input-username"><i class="icon-bookmark"></i> <b>User (Callsign)</b></label>
     <input type='text' id="node-config-input-user">
   </div>
   <div class="form-row">
-    <label for="node-config-input-password"><i class="icon-bookmark"></i> Pass</label>
+    <label for="node-config-input-password"><i class="icon-bookmark"></i> <b>Pass</b></label>
     <input type='text' id="node-config-input-pass">
   </div>
   <div class="form-row">
-    <label for="node-config-input-filter"><i class="icon-bookmark"></i> <em>Filter</em> [Optional]</label>
+    <label for="node-config-input-filter"><i class="icon-bookmark"></i> <b>Filter</b> <em>[optional]</em></label>
     <input type='text' id="node-config-input-filter">
   </div>
 
   <div class="form-row">
-      <label for="node-input-name"><i class="icon-tag"></i> [Optional] Name</label>
+      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> <em>[optional]</em></label>
       <input type="text" id="node-config-input-name" placeholder="Name">
   </div>
 </script>
@@ -64,7 +64,7 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 
 <script type="text/x-red" data-template-name="aprs rx">
   <div class="form-row">
-      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> [Optional]</label>
+      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> <em>[optional]</em></label>
       <input type="text" id="node-input-name" placeholder="Name">
   </div>
 
@@ -76,9 +76,31 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 </script>
 
 <script type="text/x-red" data-help-name="aprs rx">
-  <p>
+  <p>APRS Receive Node. Receives frames from APRS-IS using the
+  <a href="http://www.aprs-is.net/Connecting.aspx">WebSocket</a> Protocol.
 
-    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info.</a></p>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload.from.call <span class="property-type">string</span></dt>
+    <dd>From/Source Callsign in frame.</dd>
+    <dt>payload.to.call <span class="property-type">string</span></dt>
+    <dd>To/Destination Callsign in frame.</dd>
+    <dt>payload.via <span class="property-type">array</span></dt>
+    <dd>List of intermediary stations digipeating or gatewaying this frame.</dd>
+    <dt>raw <span class="property-type">string</span></dt>
+    <dd>Original frame.</dd>
+    <dt>data <span class="property-type">object</span></dt>
+    <dd>Data from APRS frame, if able to decode.</dd>
+  </dl>
+
+  <h3>Details</h3>
+    <p>This node uses a user (callsign) & pass to connect to the APRS-IS service using a WebSocket and will attempt to
+    decode received frames.</p>
+    <p>This node supports an Optional <a href="http://www.aprs-is.net/javAPRSFilter.aspx">Server-side Filter Command</a>.</p>
+
+    <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR
+     wb4apr@amsat.org</p>
+    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info on this node.</a></p>
 </script>
 
 <script type="text/javascript">
