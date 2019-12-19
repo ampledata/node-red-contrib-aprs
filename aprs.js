@@ -15,6 +15,7 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 'use strict';
 
 var WebSocket = require('ws');
+var ReconnectingWebSocket = require('reconnecting-websocket');
 var aprs = require('aprs-parser');
 
 module.exports = function(RED) {
@@ -60,13 +61,21 @@ module.exports = function(RED) {
         login = `${login} filter ${node.filter}`;
     }
 
-    ws = new WebSocket(ws_url);
+    ws = new ReconnectingWebSocket(ws_url, [], {
+        WebSocket: WebSocket,
+        debug: true
+    });
+
     var aprs_parser = new aprs.APRSParser();
 
     ws.onopen = function(evt) {
         console.debug(`${new Date().toISOString()} ws.onopen`);
         ws.send(login);
         node.status({fill: 'yellow', shape: 'dot', text: 'Connecting'});
+    };
+
+    ws.onping = function(evt) {
+        console.debug(`${new Date().toISOString()} ws.onping`);
     };
 
     ws.onmessage = function(data, flags, number) {

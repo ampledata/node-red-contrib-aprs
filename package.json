@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-aprs",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Node-RED Nodes for connecting to APRS-IS and parsing APRS frames.",
     "license": "Apache-2.0",
     "url": "https://github.com/ampledata/node-red-contrib-aprs",
@@ -11,9 +11,10 @@
     },
     "homepage": "https://github.com/ampledata/node-red-contrib-aprs",
     "dependencies": {
+        "aprs-parser": "latest",
         "node-red": "^1.0.0",
-        "ws": "latest",
-        "aprs-parser": "latest"
+        "reconnecting-websocket": "^4.2.0",
+        "ws": "latest"
     },
     "repository": {
         "type": "git",
