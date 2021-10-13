@@ -3,7 +3,7 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2019 Greg Albrecht
+Copyright:: Copyright 2021 Greg Albrecht
 License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 */
@@ -12,30 +12,31 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 /* jslint white: true */
 /* jshint esversion: 6 */
 
-'use strict';
-
-var WebSocket = require('ws');
-var ReconnectingWebSocket = require('reconnecting-websocket');
-var aprs = require('aprs-parser');
-
 module.exports = function(RED) {
-  /*
-  APRSConfig
-    Meta-Node for containing other Node-level configurations.
-  */
-  function APRSConfig(config) {
-    RED.nodes.createNode(this, config);
-    this.user = config.user;
-    this.pass = config.pass;
-    this.filter = config.filter;
-  }
+    "use strict";
 
-  RED.nodes.registerType('aprs config', APRSConfig, {
-    credentials: {
-      user: {type: 'text'},
-      pass: {type: 'text'},
-    },
-  });
+    const WebSocket = require("ws");
+    const ReconnectingWebSocket = require("reconnecting-websocket");
+    const Aprs = require("aprs-parser");
+
+    /*
+    DEPRECATED
+    APRSConfig
+      Meta-Node for containing other Node-level configurations.
+    */
+    function APRSConfig(config) {
+        RED.nodes.createNode(this, config);
+        this.user = config.user;
+        this.pass = config.pass;
+        this.filter = config.filter;
+    }
+
+    RED.nodes.registerType("aprs config", APRSConfig, {
+        credentials: {
+            user: {type: "text"},
+            pass: {type: "text"},
+        },
+    });
 
   /*
   APRSRXNode
@@ -43,30 +44,27 @@ module.exports = function(RED) {
   */
   function APRSRXNode(config) {
     RED.nodes.createNode(this, config);
-    var node = this;
-    var ws;
-    var login;
-    var ws_url = 'ws://srvr.aprs-is.net:8080';
 
-    node.aprs_config = RED.nodes.getNode(config.aprs_config);
-    node.user = node.aprs_config.credentials.user;
-    node.pass = node.aprs_config.credentials.pass;
-    node.filter = node.aprs_config.filter;
+    this.user = config.user;
+    this.filter = config.filter;
+    this.url = config.url || "ws://srvr.aprs-is.net:8080";
 
-    node.status({fill: 'red', shape: 'dot', text: 'Disconnected'});
+    let node = this;
 
-    login = `user ${node.user} pass ${node.pass} vers node-red-contrib-aprs 1`;
+    node.status({fill: "red", shape: "dot", text: "Disconnected"});
 
-    if (typeof node.filter !== 'undefined') {
+    let login = `user ${node.user} pass -1 vers node-red-contrib-aprs 2.0`;
+
+    if (typeof node.filter !== "undefined") {
         login = `${login} filter ${node.filter}`;
     }
 
-    ws = new ReconnectingWebSocket(ws_url, [], {
+    let aprsParser = new Aprs.APRSParser();
+
+    let ws = new ReconnectingWebSocket(node.url, [], {
         WebSocket: WebSocket,
         debug: true
     });
-
-    var aprs_parser = new aprs.APRSParser();
 
     ws.onopen = function(evt) {
         console.debug(`${new Date().toISOString()} ws.onopen`);
@@ -79,19 +77,25 @@ module.exports = function(RED) {
     };
 
     ws.onmessage = function(data, flags, number) {
-        console.debug(`${new Date().toISOString()} ws.onmessage data.data=${data.data}`);
+
+        console.debug(`${new Date().toISOString()} ws.onmessage data="${data.data}"`);
+
         node.status({fill: 'blue', shape: 'dot', text: 'Receiving'});
-        if (typeof data.data === 'string' && data.data.startsWith('# ')) {
-            if (data.data.includes('verified')) {
+
+        if (typeof data.data === "string" && data.data.startsWith("# ")) {
+            if (data.data.includes("verified") ||
+                data.data.includes("unverified")) {
                 node.status({fill: 'green', shape: 'dot', text: 'Connected'});
             }
         } else {
-            node.send({'payload': aprs_parser.parse(`${data.data}`)});
+            let aprsFrame = aprsParser.parse(`${data.data}`);
+            node.send({payload: {...aprsFrame}});
         }
     };
 
     ws.onclose = function (evt) {
-        console.log(`${new Date().toISOString()} ws.onclose err=${evt.code}`);
+        console.log(`${new Date().toISOString()} ws.onclose code=${evt.code}`);
+
         if (evt.code !== 4158) {
             console.log(`${new Date().toISOString()} Closing.`);
         }
@@ -99,21 +103,16 @@ module.exports = function(RED) {
     };
 
     node.on('close', function() {
-      node.debug(`${node.id} Closing APRSRX.`);
+      node.debug(`Closing APRSRX.`);
+
       try {
           ws.close(4158);
       } catch(err) {
-          console.log(`${new Date().toISOString()} ${node.id} Caught err=${err}`);
+          console.log(`${new Date().toISOString()} Caught err=${err}`);
       }
       node.status({fill: 'red', shape: 'dot', text: 'Disconnected'});
     });
   }
 
-  RED.nodes.registerType('aprs rx', APRSRXNode, {
-    credentials: {
-      user: {type: 'text'},
-      pass: {type: 'text'},
-      filter: {type: 'text'},
-    },
-  });
+    RED.nodes.registerType("aprs rx", APRSRXNode);
 };

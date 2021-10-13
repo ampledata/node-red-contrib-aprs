@@ -1,7 +1,11 @@
 node-red-contrib-aprs
 ======================
 
-<a href="https://www.nodered.org" target="_new">Node-RED</a> nodes to talk to <a href="http://www.aprs.org/" target="_new">APRS</a>.
+[Node-RED](https://www.nodered.org) Nodes for connecting to a read-only 
+[APRS-IS WebSocket](http://www.aprs-is.net/Connecting.aspx) using a 
+[reconnecting WebSocket](https://github.com/pladaria/reconnecting-websocket). 
+Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser) 
+and output as `msg.payload` JSON.
 
 Install
 -------
@@ -9,12 +13,12 @@ Install
 Run the following command in your Node-RED user directory - typically `~/.node-red`
 
 ```bash
-$ npm install node-red-contrib-aprs
+npm install node-red-contrib-aprs
 ```
 
 # Copyright & License
 
-Copyright 2019 Greg Albrecht
+Copyright 2021 Greg Albrecht
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
