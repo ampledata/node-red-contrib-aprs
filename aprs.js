@@ -17,6 +17,7 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 var WebSocket = require('ws');
 var ReconnectingWebSocket = require('reconnecting-websocket');
 var aprs = require('aprs-parser');
+var makeAPRSTXNode = require('./cwop');
 
 module.exports = function(RED) {
   /*
@@ -116,4 +117,6 @@ module.exports = function(RED) {
       filter: {type: 'text'},
     },
   });
+
+  makeAPRSTXNode(RED);
 };
