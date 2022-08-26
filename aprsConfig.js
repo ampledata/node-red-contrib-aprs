@@ -25,14 +25,24 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-'use strict';
+const makeAPRSConfigNode = RED => {
+  /*
+  APRSConfig
+    Meta-Node for containing other Node-level configurations.
+  */
+  function APRSConfig(config) {
+    RED.nodes.createNode(this, config);
+    this.user = config.user;
+    this.pass = config.pass;
+    this.filter = config.filter;
+  }
 
-module.exports = function (RED) {
-  const makeAPRSConfigNode = require('./aprsConfig');
-  const makeAPRSRXNode = require('./aprsRX');
-  const makeCWOPNode = require('./cwop');
-
-  makeAPRSConfigNode(RED);
-  makeAPRSRXNode(RED);
-  makeCWOPNode(RED);
+  RED.nodes.registerType('aprs config', APRSConfig, {
+    credentials: {
+      user: {type: 'text'},
+      pass: {type: 'text'},
+    },
+  });
 };
+
+module.exports = makeAPRSConfigNode;
