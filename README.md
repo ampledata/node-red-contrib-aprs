@@ -1,11 +1,13 @@
 node-red-contrib-aprs
 ======================
 
-[Node-RED](https://www.nodered.org) Nodes for connecting to a read-only 
-[APRS-IS WebSocket](http://www.aprs-is.net/Connecting.aspx) using a 
-[reconnecting WebSocket](https://github.com/pladaria/reconnecting-websocket). 
+[Node-RED](https://www.nodered.org) Nodes for sending & receiving [APRS](http://www.aprs.org/) from 
+the [APRS-IS]](http://www.aprs-is.net/) and [CWOP](http://www.wxqa.com/) networks.
+
 Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser) 
-and output as `msg.payload` JSON.
+and output as `msg.payload` JSON. See Node Help for more information.
+
+Special thansk to Jan Janak OK2JPR for adding CWOP and APRS TX support!
 
 Install
 -------
@@ -13,13 +15,15 @@ Install
 Run the following command in your Node-RED user directory - typically `~/.node-red`
 
 ```bash
-npm install node-red-contrib-aprs
+cd ~/.node-red
+npm i node-red-contrib-aprs
 ```
 
-# Copyright
+# Copyrights
 
-aprs.js is Copyright 2022 Greg Albrecht
-cwop.js is Copyright 2021 Jan Janak
+* aprs.js is Copyright 2022 Greg Albrecht
+* cwop.js is Copyright 2021 Jan Janak
+* <p><a href="http://www.aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
 
 # Contributors
 
