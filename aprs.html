@@ -2,14 +2,13 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2021 Greg Albrecht
+Copyright:: Copyright 2022 Greg Albrecht
 License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 -->
 
 <!-- START aprs config -->
 
-<!-- DEPRECATED -->
 <script type="text/x-red" data-template-name="aprs config">
   <div class="form-row">
     <label for="node-config-input-username"><i class="icon-bookmark"></i> <b>User (Callsign)</b></label>
@@ -33,14 +32,21 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 <script type="text/x-red" data-help-name="aprs config">
     <p>Credentials for connecting to APRS-IS or CWOP servers.</p>
     <p>Requires at least a User (Callsign).</p>
-    <p>The Pass value is optional. You may or may not need a Pass value depending on which APRS blocks you plan to use in your flows.
-    The <em>aprx rx</em> block connects to APRS-IS over WebSocket and that service always requires a valid passcode.
-    The <em>aprx tx</em> block connects to <a href="http://www.wxqa.com/">CWOP servers</a> which do not require a passcode.
+    <p>The Pass value is optional. 
+    
+    APRS does not require authentication to:
+      1. Receive APRS.
+      2. Send <a href="http://www.wxqa.com/">CWOP</a>.
+    The Pass for these two modes should ALWAYS be set to the defaulf of -1 (negative one).
+
+    APRS DOES require authentication to:
+      1. Send APRS.
+    You should use your Callsign's Pass to send APRS.
+      
     </p>
     <p>Optional field for Filter, see <a href="http://www.aprs-is.net/javAPRSFilter.aspx">Server-side Filter Commands</a>.
     Server-side filtering is only performed by the <em>aprs rx</em> block.
     </p>
-    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info.</a></p>
 
     <p><a href="https://github.com/ampledata/node-red-contrib-aprs" target="_new">More info.</a></p>
 </script>

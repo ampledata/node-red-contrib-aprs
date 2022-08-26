@@ -3,7 +3,7 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2021 Greg Albrecht
+Copyright:: Copyright 2022 Greg Albrecht
 License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 */
@@ -12,22 +12,16 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 /* jslint white: true */
 /* jshint esversion: 6 */
 
-'use strict';
+"use strict";
 
-var WebSocket = require('ws');
-var ReconnectingWebSocket = require('reconnecting-websocket');
-var aprs = require('aprs-parser');
-var makeAPRSTXNode = require('./cwop');
+const makeAPRSTXNode = require("./cwop");
 
 module.exports = function(RED) {
-    "use strict";
-
     const WebSocket = require("ws");
     const ReconnectingWebSocket = require("reconnecting-websocket");
     const Aprs = require("aprs-parser");
 
     /*
-    DEPRECATED
     APRSConfig
       Meta-Node for containing other Node-level configurations.
     */
@@ -124,5 +118,4 @@ module.exports = function(RED) {
   RED.nodes.registerType("aprs rx", APRSRXNode);
   
   makeAPRSTXNode(RED);
-
 };

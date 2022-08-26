@@ -16,9 +16,17 @@ Run the following command in your Node-RED user directory - typically `~/.node-r
 npm install node-red-contrib-aprs
 ```
 
-# Copyright & License
+# Copyright
 
-Copyright 2021 Greg Albrecht
+aprs.js is Copyright 2022 Greg Albrecht
+cwop.js is Copyright 2021 Jan Janak
+
+# Contributors
+
+* Greg Albrecht W2GMD
+* Jan Janak OK2JPR
+
+# License
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
