@@ -170,7 +170,7 @@ Disabling, this will cause more confusion than it's worth.
         outputs: 1,
         icon: "aprs.png",
         label: function () {
-            var level_node = RED.nodes.node(this.aprs_config);
+            var level_node = RED.nodes.node(this.aprsConfig);
             return this.name || (level_node ? level_node.label() : "APRS RX");
         },
         labelStyle: function () {
@@ -191,8 +191,8 @@ Disabling, this will cause more confusion than it's worth.
   </div>
 
   <div class="form-row">
-    <label for="node-input-aprs_config"><i class="icon-tag"></i> <b>Credentials</b></label>
-    <input type='text' id="node-input-aprs_config">
+    <label for="node-input-aprsConfig"><i class="icon-tag"></i> <b>Credentials</b></label>
+    <input type='text' id="node-input-aprsConfig">
   </div>
 
   <div class="form-row">
@@ -296,7 +296,7 @@ Disabling, this will cause more confusion than it's worth.
         category: 'Ham Radio',
         defaults: {
             name: { value: '' },
-            aprs_config: { value: '', type: 'aprs config' },
+            aprsConfig: { value: '', type: 'aprs config' },
             from: { value: '', required: false },
             to: { value: '', required: false },
             via: { value: '', required: false }
@@ -306,7 +306,7 @@ Disabling, this will cause more confusion than it's worth.
         outputs: 0,
         icon: 'aprs.png',
         label: function () {
-            var level_node = RED.nodes.node(this.aprs_config);
+            var level_node = RED.nodes.node(this.aprsConfig);
             return this.name || (level_node ? level_node.label() : 'APRS TX');
         },
         labelStyle: function () {

@@ -9,14 +9,14 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 
 Copyright 2022 Greg Albrecht
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+distributed under the License is distributed on an 'AS IS' BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
@@ -25,14 +25,14 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-"use strict";
+'use strict';
 
-const makeAPRSTXNode = require("./cwop");
+const makeAPRSTXNode = require('./cwop');
 
 module.exports = function(RED) {
-    const WebSocket = require("ws");
-    const ReconnectingWebSocket = require("reconnecting-websocket");
-    const Aprs = require("aprs-parser");
+    const WebSocket = require('ws');
+    const ReconnectingWebSocket = require('reconnecting-websocket');
+    const Aprs = require('aprs-parser');
 
     /*
     APRSConfig
@@ -45,10 +45,10 @@ module.exports = function(RED) {
         this.filter = config.filter;
     }
 
-    RED.nodes.registerType("aprs config", APRSConfig, {
+    RED.nodes.registerType('aprs config', APRSConfig, {
         credentials: {
-            user: {type: "text"},
-            pass: {type: "text"},
+            user: {type: 'text'},
+            pass: {type: 'text'},
         },
     });
 
@@ -61,15 +61,15 @@ module.exports = function(RED) {
 
     this.user = config.user;
     this.filter = config.filter;
-    this.url = config.url || "ws://srvr.aprs-is.net:8080";
+    this.url = config.url || 'ws://srvr.aprs-is.net:8080';
 
     let node = this;
 
-    node.status({fill: "red", shape: "dot", text: "Disconnected"});
+    node.status({fill: 'red', shape: 'dot', text: 'Disconnected'});
 
     let login = `user ${node.user} pass -1 vers node-red-contrib-aprs 2.0`;
 
-    if (typeof node.filter !== "undefined") {
+    if (typeof node.filter !== 'undefined') {
         login = `${login} filter ${node.filter}`;
     }
 
@@ -80,43 +80,45 @@ module.exports = function(RED) {
         debug: true
     });
 
-    ws.onopen = function(evt) {
-        console.debug(`${new Date().toISOString()} ws.onopen`);
+    ws.onopen = () => {
+        node.status({fill: 'black', shape: 'square', text: 'Connecting'});
         ws.send(login);
-        node.status({fill: 'yellow', shape: 'dot', text: 'Connecting'});
+        node.status({fill: 'yellow', shape: 'square', text: 'Connecting'});
     };
 
-    ws.onping = function(evt) {
+    ws.onping = () => {
         console.debug(`${new Date().toISOString()} ws.onping`);
+        node.status({fill: 'purple', shape: 'square', text: 'Ping'});
     };
 
-    ws.onmessage = function(data, flags, number) {
+    ws.onmessage = (data) => {
+        node.status({fill: 'green', shape: 'dot', text: 'Receiving'});
 
-        console.debug(`${new Date().toISOString()} ws.onmessage data="${data.data}"`);
-
-        node.status({fill: 'blue', shape: 'dot', text: 'Receiving'});
-
-        if (typeof data.data === "string" && data.data.startsWith("# ")) {
-            if (data.data.includes("verified") ||
-                data.data.includes("unverified")) {
-                node.status({fill: 'green', shape: 'dot', text: 'Connected'});
+        if (typeof data.data === 'string' && data.data.startsWith('# ')) {
+            if (data.data.includes('verified')) {
+                node.status({fill: 'blue', shape: 'dot', text: 'Connected'});
             }
         } else {
             let aprsFrame = aprsParser.parse(`${data.data}`);
+
+            // FIXME: Node.js has suppored 'object spread' since v5/v8?
+            /*jshint -W119*/
             node.send({payload: {...aprsFrame}});
+            /*jshint +W119*/
         }
     };
 
-    ws.onclose = function (evt) {
-        console.log(`${new Date().toISOString()} ws.onclose code=${evt.code}`);
+    ws.onclose = (evt) => {
+        node.status({fill: 'orange', shape: 'square', text: 'Disconnecting'});
 
         if (evt.code !== 4158) {
             console.log(`${new Date().toISOString()} Closing.`);
         }
-        node.status({fill: 'red', shape: 'dot', text: 'Disconnected'});
+        
+        node.status({fill: 'red', shape: 'square', text: 'Disconnected'});
     };
 
-    node.on('close', function() {
+    node.on('close', () => {
       node.debug(`Closing APRSRX.`);
 
       try {
@@ -124,11 +126,12 @@ module.exports = function(RED) {
       } catch(err) {
           console.log(`${new Date().toISOString()} Caught err=${err}`);
       }
+
       node.status({fill: 'red', shape: 'dot', text: 'Disconnected'});
     });
   }
 
-  RED.nodes.registerType("aprs rx", APRSRXNode);
+  RED.nodes.registerType('aprs rx', APRSRXNode);
   
   makeAPRSTXNode(RED);
 };

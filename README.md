@@ -2,7 +2,7 @@ node-red-contrib-aprs
 ======================
 
 [Node-RED](https://www.nodered.org) Nodes for sending & receiving [APRS](http://www.aprs.org/) from 
-the [APRS-IS]](http://www.aprs-is.net/) and [CWOP](http://www.wxqa.com/) networks.
+the [APRS-IS](http://www.aprs-is.net/) and [CWOP](http://www.wxqa.com/) networks.
 
 Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser) 
 and output as `msg.payload` JSON. See Node Help for more information.
