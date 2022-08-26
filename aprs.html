@@ -2,13 +2,14 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2019 Greg Albrecht
+Copyright:: Copyright 2021 Greg Albrecht
 License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 -->
 
 <!-- START aprs config -->
 
+<!-- DEPRECATED -->
 <script type="text/x-red" data-template-name="aprs config">
   <div class="form-row">
     <label for="node-config-input-username"><i class="icon-bookmark"></i> <b>User (Callsign)</b></label>
@@ -40,6 +41,8 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
     Server-side filtering is only performed by the <em>aprs rx</em> block.
     </p>
     <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info.</a></p>
+
+    <p><a href="https://github.com/ampledata/node-red-contrib-aprs" target="_new">More info.</a></p>
 </script>
 
 <script type="text/javascript">
@@ -69,20 +72,35 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
 <!-- START aprs rx -->
 
 <script type="text/x-red" data-template-name="aprs rx">
+
   <div class="form-row">
-      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> <em>[optional]</em></label>
-      <input type="text" id="node-input-name" placeholder="Name">
+    <label for="node-config-input-username"><i class="icon-bookmark"></i> <b>Your Callsign</b></label>
+    <input type='text' id="node-config-input-user" placeholder="NODERE-D">
+  </div>
+
+<!--
+Disabling, this will cause more confusion than it's worth.
+
+  <div class="form-row">
+    <label for="node-config-input-filter"><i class="icon-bookmark"></i> <b>URL</b> <br/><em>[default]</em></label>
+    <input type='text' id="node-config-input-url" placeholder="ws://srvr.aprs-is.net:8080">
+  </div>
+-->
+
+  <div class="form-row">
+    <label for="node-config-input-filter"><i class="icon-bookmark"></i> <b>Filter</b></label>
+    <input type='text' id="node-config-input-filter" placeholder="f/SUNSET/50">
+     <em>[<a href="http://www.aprs-is.net/javAPRSFilter.aspx" target="_new">Filter Help</a>]</em>
   </div>
 
   <div class="form-row">
-    <label for="node-input-aprs_config"><i class="icon-tag"></i> <b>Config</b></label>
-    <input type='text' id="node-input-aprs_config">
+      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b></label>
+      <input type="text" id="node-input-name" placeholder="my-aprsis-connection">
   </div>
-
 </script>
 
 <script type="text/x-red" data-help-name="aprs rx">
-  <p>APRS Receive Node. Receives frames from APRS-IS using the
+  <p>APRS RX Node. Receives & Decodes APRS Frames from APRS-IS using the
   <a href="http://www.aprs-is.net/Connecting.aspx">WebSocket</a> Protocol.
 
   <h3>Outputs</h3>
@@ -100,32 +118,40 @@ Source:: https://github.com/ampledata/node-red-contrib-aprs
   </dl>
 
   <h3>Details</h3>
-    <p>This node uses a user (callsign) & pass to connect to the APRS-IS service using a WebSocket and will attempt to
-    decode received frames.</p>
-    <p>This node supports an Optional <a href="http://www.aprs-is.net/javAPRSFilter.aspx">Server-side Filter Command</a>.</p>
+    <p>This node uses a generic callsign to connect to a receive-only APRS-IS
+    WebSocket. Once connected the Node decodes received APRS Frames and sends
+    them as JSON.</p>
+
+    <p>All configuration parameters are optional, but of particular note is the
+    <b>Filter</b> parameter, which supports the
+    <a href="http://www.aprs-is.net/javAPRSFilter.aspx" target="_new">APRS-IS Server-side Filter Command</a>.</p>
 
     <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR
      wb4apr@amsat.org</p>
-    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info on this node.</a></p>
+
+    <p>More info on the <em>node-red-contrib-aprs</em> Node can be found at:
+    <a href="https://github.com/ampledata/node-red-contrib-aprs" target="_new">https://github.com/ampledata/node-red-contrib-aprs</a></p>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('aprs rx', {
-        category: 'Ham Radio',
+    RED.nodes.registerType("aprs rx", {
+        category: "Ham Radio",
         defaults: {
-            name: { value: '' },
-            aprs_config: { value: '', type: 'aprs config' },
+            name: { value: "" },
+            user: { value: "NODERE-D" },
+            url: { value: "ws://srvr.aprs-is.net:8080" },
+            filter: { value: "f/SUNSET/50"}
         },
-        color: '#87CEFA',
+        color: "#87CEFA",
         inputs: 0,
         outputs: 1,
-        icon: 'aprs.png',
+        icon: "aprs.png",
         label: function () {
             var level_node = RED.nodes.node(this.aprs_config);
-            return this.name || (level_node ? level_node.label() : 'APRS RX');
+            return this.name || (level_node ? level_node.label() : "APRS RX");
         },
         labelStyle: function () {
-            return this.name ? 'node_label_italic' : '';
+            return this.name ? "node_label_italic" : "";
         }
       }
     )
