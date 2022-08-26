@@ -7,7 +7,9 @@ the [APRS-IS](http://www.aprs-is.net/) and [CWOP](http://www.wxqa.com/) networks
 Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser) 
 and output as `msg.payload` JSON. See Node Help for more information.
 
-Special thansk to Jan Janak OK2JPR for adding CWOP and APRS TX support!
+Special thanks to Jan Janak OK2JPR for adding CWOP and APRS TX support!
+
+Check me out in the [Node-RED Library](https://flows.nodered.org/node/node-red-contrib-aprs).
 
 Install
 -------
