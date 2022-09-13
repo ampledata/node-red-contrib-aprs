@@ -3,8 +3,6 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2022 Greg Albrecht
-License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 
 Copyright 2022 Greg Albrecht
