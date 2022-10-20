@@ -1,0 +1,315 @@
+<!--
+APRS Node-RED Nodes.
+
+Author:: Greg Albrecht W2GMD <oss@undef.net>
+Copyright:: Copyright 2022 Greg Albrecht
+License:: Apache License, Version 2.0
+Source:: https://github.com/ampledata/node-red-contrib-aprs
+
+    <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
+
+Copyright 2022 Greg Albrecht
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- START aprs config -->
+
+<script type="text/x-red" data-template-name="aprs config">
+  <div class="form-row">
+    <label for="node-config-input-user"><i class="icon-bookmark"></i> <b>User (Callsign)</b></label>
+    <input type='text' id="node-config-input-user">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-password"><i class="icon-bookmark"></i> <b>Pass</b> <em>[optional]</em></label>
+    <input type='text' id="node-config-input-pass">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-filter"><i class="icon-bookmark"></i> <b>Filter</b> <em>[optional]</em></label>
+    <input type='text' id="node-config-input-filter">
+  </div>
+
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> <em>[optional]</em></label>
+      <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="aprs config">
+  <p>Credentials for connecting to APRS-IS or CWOP servers.</p>
+  <p>Requires at least a User (Callsign).</p>
+  <p>The Pass value is optional.
+
+  APRS does not require authentication to:
+    1. Receive APRS.
+    2. Send <a href="http://www.wxqa.com/">CWOP</a>.
+  The Pass for these two modes should ALWAYS be set to the defaulf of -1 (negative one).
+
+  APRS DOES require authentication to:
+    1. Send APRS.
+  You should use your Callsign's Pass to send APRS.
+
+  </p>
+  <p>Optional field for Filter, see <a href="http://www.aprs-is.net/javAPRSFilter.aspx">Server-side Filter Commands</a>.
+  Server-side filtering is only performed by the <em>aprs rx</em> block.
+  </p>
+
+  <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
+
+  <p><a href="https://github.com/ampledata/node-red-contrib-aprs" target="_new">More info.</a></p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("aprs config", {
+    category: "config",
+    defaults: {
+      filter: { value: "", required: false },
+      name: { value: "", required: false },
+      pass: { value: "-1", required: false },
+    },
+    credentials: {
+      user: { type: "text" },
+      pass: { type: "text" },
+    },
+    label: function () {
+      return this.name || this.credentials.user;
+    },
+    labelStyle: function () {
+      return this.name ? "node_label_italic" : "";
+    },
+  });
+</script>
+
+<!-- END aprs config -->
+
+<!-- START aprs rx -->
+
+<script type="text/x-red" data-template-name="aprs rx">
+
+    <div class="form-row">
+      <label for="node-input-user"><i class="icon-bookmark"></i> <b>Your Callsign</b></label>
+      <input type='text' id="node-input-user" placeholder="NODERE-D">
+    </div>
+
+  <!--
+  Disabling, this will cause more confusion than it's worth.
+
+    <div class="form-row">
+      <label for="node-input-url"><i class="icon-bookmark"></i> <b>URL</b> <br/><em>[default]</em></label>
+      <input type='text' id="node-input-url" placeholder="ws://srvr.aprs-is.net:8080">
+    </div>
+  -->
+
+    <div class="form-row">
+      <label for="node-input-filter"><i class="icon-bookmark"></i> <b>Filter</b></label>
+      <input type='text' id="node-input-filter" placeholder="f/SUNSET/50">
+       <em>[<a href="http://www.aprs-is.net/javAPRSFilter.aspx" target="_new">Filter Help</a>]</em>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b></label>
+        <input type="text" id="node-input-name" placeholder="my-aprsis-connection">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="aprs rx">
+  <p>APRS RX Node. Receives & Decodes APRS Frames from APRS-IS using the
+  <a href="http://www.aprs-is.net/Connecting.aspx">WebSocket</a> Protocol.
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload.from.call <span class="property-type">string</span></dt>
+    <dd>From/Source Callsign in frame.</dd>
+    <dt>payload.to.call <span class="property-type">string</span></dt>
+    <dd>To/Destination Callsign in frame.</dd>
+    <dt>payload.via <span class="property-type">array</span></dt>
+    <dd>List of intermediary stations digipeating or gatewaying this frame.</dd>
+    <dt>raw <span class="property-type">string</span></dt>
+    <dd>Original frame.</dd>
+    <dt>data <span class="property-type">object</span></dt>
+    <dd>Data from APRS frame, if able to decode.</dd>
+  </dl>
+
+  <h3>Details</h3>
+    <p>This node uses a generic callsign to connect to a receive-only APRS-IS
+    WebSocket. Once connected the Node decodes received APRS Frames and sends
+    them as JSON.</p>
+
+    <p>All configuration parameters are optional, but of particular note is the
+    <b>Filter</b> parameter, which supports the
+    <a href="http://www.aprs-is.net/javAPRSFilter.aspx" target="_new">APRS-IS Server-side Filter Command</a>.</p>
+
+    <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
+
+    <p>More info on the <em>node-red-contrib-aprs</em> Node can be found at:
+    <a href="https://github.com/ampledata/node-red-contrib-aprs" target="_new">https://github.com/ampledata/node-red-contrib-aprs</a></p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("aprs rx", {
+    category: "Ham Radio",
+    defaults: {
+      name: { value: "" },
+      user: { value: "NODERE-D" },
+      url: { value: "ws://srvr.aprs-is.net:8080" },
+      filter: { value: "f/SUNSET/50" },
+    },
+    color: "#87CEFA",
+    inputs: 0,
+    outputs: 1,
+    icon: "aprs.png",
+    label: function () {
+      var level_node = RED.nodes.node(this.aprsConfig);
+      return this.name || (level_node ? level_node.label() : "APRS RX");
+    },
+    labelStyle: function () {
+      return this.name ? "node_label_italic" : "";
+    },
+  });
+</script>
+
+<!-- END aprs rx -->
+
+<!-- START aprs tx -->
+
+<script type="text/x-red" data-template-name="aprs tx">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> <b>Name</b> <em>[optional]</em></label>
+      <input type="text" id="node-input-name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-aprsConfig"><i class="icon-tag"></i> <b>Credentials</b></label>
+    <input type='text' id="node-input-aprsConfig">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-from"><i class="icon-tag"></i> <b>From Callsign</b> <em>[optional]</em></label>
+    <input type='text' id="node-input-from">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-to"><i class="icon-tag"></i> <b>To Callsign</b> <em>[optional]</em></label>
+    <input type='text' id="node-input-to" placeholder="APRS">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-via"><i class="icon-tag"></i> <b>Via</b> <em>[optional]</em></label>
+    <input type='text' id="node-input-via" placeholder="TCPIP*">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="aprs tx">
+    <p>APRS (CWOP) transmit node.</p>
+
+    <P>This node can be used to transmit WX reports to APRS via the servers operated by the
+    <a href="http://www.wxqa.com">Citizen Weather Observer Program (CWOP)</a>.
+    CWOP is an extension of APRS for non-HAM weather stations.
+    The reports are not propagated via RF (AX.25), but are visible on the web, for example, at <a href="https://aprs.fi">aprs.fi</a>.</p>
+
+    <h3>Description</h3>
+
+    <p>Upon receiving a message on input, the node connects to one of the CWOP servers at cwop.aprs.net and transmits the message to APRS-IS through the servers.
+    The block will authenticate with the configured credentials. If the credentials contain no passcode, -1 will be used (CWOP servers do not require authentication).</p>
+
+    <p>The input message must contain a string or object payload.</p>
+
+    <p>If the payload is a string, it is assumed to be APRS-formatted data without From, To, or Via callsigns.
+    From, To, and Via callsigns configured in the node will be added and the message will be transmitted to APRS.
+    You must configure at least the From callsign in the node to be able to use string payloads.
+    </p>
+
+    <p>If the payload is an object, it is assumed to be a weather report in a format compatible with the parsed
+    format generated by <a href="https://www.npmjs.com/package/aprs-parser">aprs-parser</a> npm package.
+    The attribute <em>raw</em> (if present) is ignored.
+    If <em>from</em>, <em>to</em>, or <em>via</em> attributes are present, their values will be used to set the From, To, or Via callsigns in the APRS message,
+    overriding any callsigns configured in the node.
+    The <em>data</em> attribute value will be encoded into an APRS WX report format.
+    At the moment, the node can only encode WX report messages.
+    </p>
+
+    <h3>Example String Payload</h3>
+    <pre>CALL-6&gt;APRS,TCPIP*:@231821z5150.13N/01913.68E_239/003g010t042r000p011P011b09969h83L000</pre>
+
+    <h3>Example Object Payload</h3>
+    <pre>{
+    from: { call: "CALL", ssid: "6" },
+    data: {
+      latitude: 51.8355,
+      longitude: 19.228,
+      extension: { courseDeg: 239, speedMPerS: 1.543333332 },
+      weather: {
+        windGust: 4.4704,
+        temperature: 5.555555555555555,
+        rain1h: 0,
+        rain24h: 2.794,
+        rainSinceMidnight: 2.794,
+        pressure: 996.9,
+        humidity: 83,
+        luminosity: 0
+      },
+      comment: "Node-RED WX Station",
+      timestamp: "2021-01-23T18:21:00.000Z"
+    }
+  }</pre>
+
+  <h4>Shorthand Payload Syntax</h4>
+  <p>If you have a From callsign configured in the node, you can put the contents of the <em>data</em> attribute directly into msg.payload as follows:</p>
+  <pre>{
+    latitude: 51.8355,
+    longitude: 19.228,
+    extension: { courseDeg: 239, speedMPerS: 1.543333332 },
+    weather: {
+      windGust: 4.4704,
+      temperature: 5.555555555555555,
+      rain1h: 0,
+      rain24h: 2.794,
+      rainSinceMidnight: 2.794,
+      pressure: 996.9,
+      humidity: 83,
+      luminosity: 0
+    },
+    comment: "Node-RED WX Station",
+    timestamp: "2021-01-23T18:21:00.000Z"
+  }</pre>
+
+    <p><a href="http://aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
+
+    <p><a href="https://github.com/ampledata/node-red-contrib-aprs">More info on this node.</a></p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("aprs tx", {
+    category: "Ham Radio",
+    defaults: {
+      name: { value: "" },
+      aprsConfig: { value: "", type: "aprs config" },
+      from: { value: "", required: false },
+      to: { value: "", required: false },
+      via: { value: "", required: false },
+    },
+    color: "#87CEFA",
+    inputs: 1,
+    outputs: 0,
+    icon: "aprs.png",
+    label: function () {
+      var level_node = RED.nodes.node(this.aprsConfig);
+      return this.name || (level_node ? level_node.label() : "APRS TX");
+    },
+    labelStyle: function () {
+      return this.name ? "node_label_italic" : "";
+    },
+  });
+</script>
+
+<!-- END aprs tx -->

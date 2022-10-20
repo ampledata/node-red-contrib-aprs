@@ -3,6 +3,8 @@
 APRS Node-RED Nodes.
 
 Author:: Greg Albrecht W2GMD <oss@undef.net>
+Copyright:: Copyright 2022 Greg Albrecht
+License:: Apache License, Version 2.0
 Source:: https://github.com/ampledata/node-red-contrib-aprs
 
 Copyright 2022 Greg Albrecht
@@ -23,24 +25,13 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-const makeAPRSConfigNode = RED => {
-  /*
-  APRSConfig
-    Meta-Node for containing other Node-level configurations.
-  */
-  function APRSConfig(config) {
-    RED.nodes.createNode(this, config);
-    this.user = config.user;
-    this.pass = config.pass;
-    this.filter = config.filter;
-  }
+// Ignore: 800001
+module.exports = function (RED) {
+  const makeAPRSConfigNode = require("./aprsConfig");
+  const makeAPRSRXNode = require("./aprsRX");
+  const makeAPRSTXNode = require("./aprsTX");
 
-  RED.nodes.registerType('aprs config', APRSConfig, {
-    credentials: {
-      user: {type: 'text'},
-      pass: {type: 'text'},
-    },
-  });
+  makeAPRSConfigNode(RED);
+  makeAPRSRXNode(RED);
+  makeAPRSTXNode(RED);
 };
-
-module.exports = makeAPRSConfigNode;

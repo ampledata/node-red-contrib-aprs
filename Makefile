@@ -27,3 +27,6 @@ eslint:
 
 jslint:
 	jslint *.js
+
+pretty:
+	npx prettier --write .
