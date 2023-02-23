@@ -21,7 +21,7 @@ npm i node-red-contrib-aprs
 
 # Copyrights
 
-- aprs.js is Copyright 2022 Greg Albrecht
+- aprs.js is Copyright 2023 Greg Albrecht
 - CWOP support is Copyright 2021 Jan Janak
 - <p><a href="http://www.aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
 

@@ -48,7 +48,7 @@ const makeRXNode = (RED) => {
       login = `${login} filter ${node.filter}`;
     }
 
-    let aprsParser = new Aprs();
+    let aprsParser = new Aprs.APRSParser();
 
     let ws = new ReconnectingWebSocket(node.url, [], {
       WebSocket: WebSocket,
