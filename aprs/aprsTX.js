@@ -40,28 +40,36 @@ const makeAPRSTXNode = (RED) => {
     node.from = config.from;
     node.to = config.to;
     node.via = config.via;
+    node.server = config.server;
+    node.port = config.server;
 
     node.status({ fill: "green", shape: "dot", text: "Idle" });
 
     node.on("input", (msg) => {
       node.status({ fill: "yellow", shape: "dot", text: "Transmitting" });
 
-      const p = typeof msg.payload === "object" ? msg.payload : {};
-      const from = p.from || p.name || node.from;
-      const to = p.to || node.to || "APYSNR";
-      const via = p.via || node.via;
+      const pl = typeof msg.payload === "object" ? msg.payload : {};
+      const from = pl.from || pl.name || node.from;
+      const to = pl.to || node.to || "APYSNR";
+      const via = pl.via || node.via;
 
       try {
         let data;
-        let server;
-        let pl = msg.payload;
+        
+        let server = node.server;
+        let port = node.port;
 
         switch (typeof pl) {
           case "string":
             data = pl;
             break;
+
           case "object":
             let rootPl;
+
+            server = pl.server || node.server;
+            port = pl.port || node.port;
+
             if (pl.data) {
               rootPl = pl.data;
             } else {
@@ -70,10 +78,9 @@ const makeAPRSTXNode = (RED) => {
 
             if (rootPl.weather) {
               data = aprsLib.formatWxReport(rootPl);
-              server = p.server || node.server || "cwop.aprs.net";
+              server = pl.server || node.server || "cwop.aprs.net";
             } else {
               data = aprsLib.formatPosData(rootPl);
-              server = p.server || node.server || "rotate.aprs2.net";
             }
 
             break;
@@ -84,16 +91,17 @@ const makeAPRSTXNode = (RED) => {
 
         const packet = aprsLib.formatPacket(from, to, via, data);
 
-        aprsLib.sendPacket(node.user, node.pass, packet, 20, server)
+        aprsLib.sendPacket(node.user, node.pass, packet, 20, server, port)
           .then(() => {
             node.status({ fill: "green", shape: "dot", text: "Idle" });
           })
           .catch((error) => {
-            node.status({ fill: "red", shape: "dot", text: `${error}` });
+            node.status({ fill: "red", shape: "dot", text: `Error: ${error}` });
             this.error(error, msg);
           });
+
       } catch (error) {
-        node.status({ fill: "red", shape: "dot", text: `${error}` });
+        node.status({ fill: "red", shape: "dot", text: `Error: ${error}` });
         this.error(error, msg);
       }
     });

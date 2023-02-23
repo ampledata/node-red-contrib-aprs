@@ -101,14 +101,10 @@ limitations under the License.
       <input type='text' id="node-input-user" placeholder="NODERE-D">
     </div>
 
-  <!--
-  Disabling, this will cause more confusion than it's worth.
-
     <div class="form-row">
-      <label for="node-input-url"><i class="icon-bookmark"></i> <b>URL</b> <br/><em>[default]</em></label>
+      <label for="node-input-url"><i class="icon-bookmark"></i> <b>APRS WebSocket URL</b> <br/><em>[default]</em></label>
       <input type='text' id="node-input-url" placeholder="ws://srvr.aprs-is.net:8080">
     </div>
-  -->
 
     <div class="form-row">
       <label for="node-input-filter"><i class="icon-bookmark"></i> <b>Filter</b></label>
@@ -207,6 +203,17 @@ limitations under the License.
     <label for="node-input-via"><i class="icon-tag"></i> <b>Via</b> <em>[optional]</em></label>
     <input type='text' id="node-input-via" placeholder="TCPIP*">
   </div>
+
+  <div class="form-row">
+    <label for="node-input-server"><i class="icon-bookmark"></i> <b>Server</b> <br/><em>[optional]</em></label>
+    <input type='text' id="node-input-server"  placeholder="[varies]">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-port"><i class="icon-bookmark"></i> <b>Port</b> <br/><em>[optional]</em></label>
+    <input type='text' id="node-input-port" placeholder="14580">
+  </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="aprs tx">
@@ -297,6 +304,8 @@ limitations under the License.
       from: { value: "", required: false },
       to: { value: "", required: false },
       via: { value: "", required: false },
+      server: { value: "", required: false },
+      port: { value: "", required: false },
     },
     color: "#87CEFA",
     inputs: 1,
