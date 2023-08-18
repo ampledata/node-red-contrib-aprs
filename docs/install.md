@@ -1,4 +1,3 @@
-
 Run the following command in your Node-RED user directory - typically `~/.node-red`
 
 ```bash

@@ -20,7 +20,7 @@
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "3.0.0"
+const VERSION = "3.0.0";
 
 // APRSRXNode: Node for Receiving (RX) events from APRS.
 const makeRXNode = (RED) => {
@@ -44,7 +44,7 @@ const makeRXNode = (RED) => {
     if (typeof node.filter !== "undefined") {
       login = `${login} filter ${node.filter}`;
     } else {
-      login = `${login} filter f/SUNSET/10`
+      login = `${login} filter f/SUNSET/10`;
     }
 
     let aprsParser = new Aprs.APRSParser();

@@ -20,7 +20,7 @@
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "3.0.0"
+const VERSION = "3.0.0";
 
 // Ignore: 800001
 module.exports = function (RED) {

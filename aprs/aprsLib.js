@@ -20,7 +20,7 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "3.0.0"
+const VERSION = "3.0.0";
 const Socket = require("net").Socket;
 const readline = require("readline");
 
@@ -374,7 +374,7 @@ const sendPacket = (
       switch (state) {
         case "start":
           let loginPayload = `${formatLogin(username, password)}\r\n`;
-          console.log(loginPayload)
+          console.log(loginPayload);
           sock.write(loginPayload);
           state = "login";
           break;
@@ -382,7 +382,11 @@ const sendPacket = (
         case "login":
           if (!line.startsWith("# logresp ")) {
             close();
-            reject(new Error("Received invalid login response from APSR-IS: " + line));
+            reject(
+              new Error(
+                "Received invalid login response from APSR-IS: " + line,
+              ),
+            );
             return;
           }
           let payload = `${packet}\r\n`;

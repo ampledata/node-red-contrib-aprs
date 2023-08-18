@@ -20,13 +20,13 @@
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "3.0.0"
+const VERSION = "3.0.0";
 
 const makeAPRSConfigNode = (RED) => {
   /**
    * APRSConfig
    *  Meta-Node for containing other Node-level configurations.
-   * @param {*} config 
+   * @param {*} config
    **/
   function APRSConfig(config) {
     RED.nodes.createNode(this, config);

@@ -6,8 +6,8 @@ site_author: Greg Albrecht <oss@undef.net>
 copyright: Copyright Greg Albrecht and other contributors
 
 formats:
-   - pdf
-   - epub
+  - pdf
+  - epub
 
 theme:
   name: material

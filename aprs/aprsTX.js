@@ -20,7 +20,7 @@
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "3.0.0"
+const VERSION = "3.0.0";
 const aprsLib = require("./aprsLib");
 
 // APRSTXNode: Node for transmitting data to APRS-IS.
@@ -104,7 +104,7 @@ const makeAPRSTXNode = (RED) => {
             server: sockConf[4],
             port: sockConf[5],
           });
-          node.done()
+          node.done();
         }
 
         aprsLib

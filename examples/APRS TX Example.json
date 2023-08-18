@@ -1,73 +1,65 @@
 [
   {
-      "id": "inject_node",
-      "type": "inject",
-      "z": "db9a2e13b58675d9",
-      "name": "",
-      "props": [],
-      "repeat": "",
-      "crontab": "",
-      "once": false,
-      "onceDelay": 0.1,
-      "topic": "",
-      "x": 310,
-      "y": 200,
-      "wires": [
-          [
-              "func_node"
-          ]
-      ]
+    "id": "inject_node",
+    "type": "inject",
+    "z": "db9a2e13b58675d9",
+    "name": "",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 310,
+    "y": 200,
+    "wires": [["func_node"]]
   },
   {
-      "id": "func_node",
-      "type": "function",
-      "z": "db9a2e13b58675d9",
-      "name": "Create APRS Payload",
-      "func": "// APRS TX Node uses WorldMap serialized data:\nmsg.payload = {\n    'from': 'taco',\n    'lat': '1.2',\n    'lon': '2.3',\n    'comment': 'test comment'\n}\n\nreturn msg;",
-      "outputs": 1,
-      "noerr": 0,
-      "initialize": "",
-      "finalize": "",
-      "libs": [],
-      "x": 480,
-      "y": 200,
-      "wires": [
-          [
-              "aprs_tx_node"
-          ]
-      ]
+    "id": "func_node",
+    "type": "function",
+    "z": "db9a2e13b58675d9",
+    "name": "Create APRS Payload",
+    "func": "// APRS TX Node uses WorldMap serialized data:\nmsg.payload = {\n    'from': 'taco',\n    'lat': '1.2',\n    'lon': '2.3',\n    'comment': 'test comment'\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 480,
+    "y": 200,
+    "wires": [["aprs_tx_node"]]
   },
   {
-      "id": "comment_node",
-      "type": "comment",
-      "z": "db9a2e13b58675d9",
-      "name": "APRS TX Example",
-      "info": "This example creates a test WorldMap payload, serializses it as an APRS packet, and sends it to the APRS-IS backbone.",
-      "x": 350,
-      "y": 160,
-      "wires": []
+    "id": "comment_node",
+    "type": "comment",
+    "z": "db9a2e13b58675d9",
+    "name": "APRS TX Example",
+    "info": "This example creates a test WorldMap payload, serializses it as an APRS packet, and sends it to the APRS-IS backbone.",
+    "x": 350,
+    "y": 160,
+    "wires": []
   },
   {
-      "id": "aprs_tx_node",
-      "type": "aprs tx",
-      "z": "db9a2e13b58675d9",
-      "name": "",
-      "aprsConfig": "config_node",
-      "from": "",
-      "to": "",
-      "via": "",
-      "server": "rotate.aprs2.net",
-      "port": "14580",
-      "x": 650,
-      "y": 200,
-      "wires": []
+    "id": "aprs_tx_node",
+    "type": "aprs tx",
+    "z": "db9a2e13b58675d9",
+    "name": "",
+    "aprsConfig": "config_node",
+    "from": "",
+    "to": "",
+    "via": "",
+    "server": "rotate.aprs2.net",
+    "port": "14580",
+    "x": 650,
+    "y": 200,
+    "wires": []
   },
   {
-      "id": "config_node",
-      "type": "aprs config",
-      "filter": "",
-      "user": "User",
-      "name": "",
-      "pass": "Pass"
+    "id": "config_node",
+    "type": "aprs config",
+    "filter": "",
+    "user": "User",
+    "name": "",
+    "pass": "Pass"
   }
 ]

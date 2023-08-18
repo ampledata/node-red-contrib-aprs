@@ -241,5 +241,4 @@ describe("test APRS Nodes", () => {
       });
     });
   });
-
 });
