@@ -1,0 +1,35 @@
+site_name: Node-RED APRS Nodes
+site_url: https://node-red-contrib-aprs.rtfd.io/
+repo_url: https://github.com/ampledata/node-red-contrib-aprs/
+site_description: node-red-contrib-aprs Documentation
+site_author: Greg Albrecht <oss@undef.net>
+copyright: Copyright Greg Albrecht and other contributors
+
+theme:
+  name: material
+  highlightjs: true
+
+plugins:
+  - include-markdown:
+      opening_tag: "{!"
+      closing_tag: "!}"
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+
+markdown_extensions:
+  - markdown_include.include:
+      base_path: .
+  - admonition
+  - toc:
+      permalink: True
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

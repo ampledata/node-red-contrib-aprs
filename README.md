@@ -1,7 +1,10 @@
 # node-red-contrib-aprs
 
-[Node-RED](https://www.nodered.org) Nodes for sending & receiving [APRS](http://www.aprs.org/) from
-the [APRS-IS](http://www.aprs-is.net/) and [CWOP](http://www.wxqa.com/) networks.
+![APRS TX Example](img/screenshot-tx-example.png)
+
+[Node-RED](https://www.nodered.org) Nodes for communicating with [APRS](http://www.aprs.org/)
+using the [APRS-IS](http://www.aprs-is.net/) or Citizen Weather Observer Program (NOAA MADIS)
+[CWOP](http://www.wxqa.com/) networks.
 
 Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser)
 and output as `msg.payload` JSON. See Node Help for more information.
@@ -10,28 +13,13 @@ Special thanks to Jan Janak OK2JPR for adding CWOP and APRS TX support!
 
 Check me out in the [Node-RED Library](https://flows.nodered.org/node/node-red-contrib-aprs).
 
-## Install
+[Documentation is available here](http://node-red-contrib-aprs.rtfd.io/)
 
-Run the following command in your Node-RED user directory - typically `~/.node-red`
+# License & Copyright
 
-```bash
-cd ~/.node-red
-npm i node-red-contrib-aprs
-```
-
-# Copyrights
-
-- aprs.js is Copyright 2023 Greg Albrecht
-- CWOP support is Copyright 2021 Jan Janak
 - <p><a href="http://www.aprs.org">Automatic Packet Reporting System (APRS)</a> is Copyright Bob Bruninga WB4APR (SK)</p>
 
-# Contributors
-
-- Greg Albrecht W2GMD
-- Jan Janak OK2JPR
-- Pete Loveall AE5PL 
-
-# License
+Copyright Greg Albrecht and other contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

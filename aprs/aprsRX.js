@@ -1,26 +1,21 @@
 #!/usr/bin/env node
-/*
-APRS RX Node-RED Nodes.
-
-Author:: Greg Albrecht W2GMD <oss@undef.net>
-Copyright:: Copyright 2022 Greg Albrecht
-License:: Apache License, Version 2.0
-Source:: https://github.com/ampledata/node-red-contrib-aprs
-
-Copyright 2022 Greg Albrecht
-
-Licensed under the Apache License, Version 2.0 (the 'License');
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an 'AS IS' BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+/**
+ * APRS Node-RED RX Node.
+ *
+ * Copyright Greg Albrecht and other contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the 'License');
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an 'AS IS' BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
 
 /* jslint node: true */
 /* jslint white: true */
@@ -30,10 +25,10 @@ const makeRXNode = (RED) => {
   function APRSRXNode(config) {
     RED.nodes.createNode(this, config);
 
-    const WebSocket = require('ws');
-    const ReconnectingWebSocket = require('reconnecting-websocket');
-    const Aprs = require('aprs-parser');
-    
+    const WebSocket = require("ws");
+    const ReconnectingWebSocket = require("reconnecting-websocket");
+    const Aprs = require("aprs-parser");
+
     this.user = config.user;
     this.filter = config.filter;
     this.url = config.url || "ws://srvr.aprs-is.net:8080";

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "debug_node",
+    "type": "debug",
+    "z": "0f5a88599bcf4911",
+    "name": "APRS Data Received",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 320,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "rx_node",
+    "type": "aprs rx",
+    "z": "0f5a88599bcf4911",
+    "name": "Generic APRS Connection",
+    "user": "NODERE-D",
+    "url": "ws://srvr.aprs-is.net:8080",
+    "filter": "f/SUNSET/50",
+    "x": 160,
+    "y": 300,
+    "wires": [["debug_node"]]
+  }
+]

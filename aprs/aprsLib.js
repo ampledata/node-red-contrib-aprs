@@ -2,10 +2,7 @@
 /*
 APRS Node-RED Libraries.
 
-Author:: Greg Albrecht W2GMD <oss@undef.net>
-Author:: Jan Janak (OK2JPR) <jan@janakj.org>
-License:: Apache License, Version 2.0
-Source:: https://github.com/ampledata/node-red-contrib-aprs
+Copyright 2023 Greg Albrecht
 
 Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
@@ -23,8 +20,9 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-const Socket = require('net').Socket;
-const readline = require('readline');
+const VERSION = "2.0";
+const Socket = require("net").Socket;
+const readline = require("readline");
 
 const formatDateTime = (date) => {
   const d = `${date.getUTCDate()}`.padStart(2, "0");
@@ -35,7 +33,7 @@ const formatDateTime = (date) => {
 
 // The parameter is temperature in degrees of Fahrenheit
 const formatTemperature = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     value = "...";
   } else {
     // Convert the temperature value from degrees of Celsius to degrees of Fahrenheit
@@ -59,7 +57,7 @@ const formatTemperature = (value) => {
 // The parameter must be a null (value not available) or a number of degrees in
 // the range <0, 360> the wind is blowing from. The value is clock-wise from due north.
 const formatWindDirection = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     value = "...";
   } else {
     value = Math.round(value);
@@ -81,7 +79,7 @@ const formatWindDirection = (value) => {
 
 // Wind speed in m/s
 const formatMphSpeed = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     return "...";
   }
   // Multiple by 1.943844 to get knots. Multiple by 2.23693629 to get mph.
@@ -95,7 +93,7 @@ const formatMphSpeed = (value) => {
 
 // The value is in millimeters and will be converted to hundreds of an inch
 const formatRain = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     return "...";
   }
   // Convert to hundreds of an inch and round
@@ -108,7 +106,7 @@ const formatRain = (value) => {
 
 // The value is in millibars (hPa) and will be converted to tenths of a millibar
 const formatPressure = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     value = ".....";
   } else {
     // Convert to tenths of a millibar
@@ -122,7 +120,7 @@ const formatPressure = (value) => {
 };
 
 const formatHumidity = (value) => {
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     value = "..";
   } else {
     value = Math.round(value);
@@ -141,7 +139,7 @@ const formatHumidity = (value) => {
 // The input value is in Watts per square meter.
 const formatLuminosity = (value) => {
   let fmt = "L";
-  if (value === undefined || value === null) {
+  if (typeof value === "undefined" || value === null) {
     value = "...";
   } else {
     value = Math.round(value);
@@ -216,46 +214,53 @@ const formatWxReport = ({
   weather,
   comment,
 }) => {
-  if (timestamp !== undefined && typeof timestamp !== "string") {
+  if (typeof timestamp !== "undefined" && typeof timestamp !== "string") {
     throw new Error("Timestamp must be an ISO string");
   }
 
-  if (longitude === undefined || longitude === null) {
+  if (typeof longitude === "undefined" || longitude === null) {
     throw new Error("Missing longitude value");
   }
 
-  if (latitude === undefined || latitude === null) {
+  if (typeof latitude === "undefined" || latitude === null) {
     throw new Error("Missing latitude value");
   }
 
-  const e = extension || {};
-  const w = weather || {};
+  const e =
+    typeof extension !== "undefined" && extension !== null ? extension : {};
+  const w = typeof weather !== "undefined" && weather !== null ? weather : {};
 
   let msg = "";
   msg += formatDateTime(
-    timestamp ? new Date(Date.parse(timestamp)) : new Date()
+    timestamp ? new Date(Date.parse(timestamp)) : new Date(),
   );
   msg += formatPosition([longitude, latitude]);
   msg += formatWindDirection(e.courseDeg);
   msg += `/${formatMphSpeed(e.speedMPerS)}`;
   msg += `g${formatMphSpeed(w.windGust)}`;
   msg += formatTemperature(w.temperature);
-  if (w.rain1h !== undefined) {
+
+  if (typeof w.rain1h !== "undefined") {
     msg += `r${formatRain(w.rain1h)}`;
   }
-  if (w.rain24h !== undefined) {
+
+  if (typeof w.rain24h !== "undefined") {
     msg += `p${formatRain(w.rain24h)}`;
   }
-  if (w.rainSinceMidnight !== undefined) {
+
+  if (typeof w.rainSinceMidnight !== "undefined") {
     msg += `P${formatRain(w.rainSinceMidnight)}`;
   }
-  if (w.pressure !== undefined) {
+
+  if (typeof w.pressure !== "undefined") {
     msg += formatPressure(w.pressure);
   }
-  if (w.humidity !== undefined) {
+
+  if (typeof w.humidity !== "undefined") {
     msg += formatHumidity(w.humidity);
   }
-  if (w.luminosity !== undefined) {
+
+  if (typeof w.luminosity !== "undefined") {
     msg += formatLuminosity(w.luminosity);
   }
 
@@ -268,10 +273,13 @@ const formatWxReport = ({
 const formatLogin = (
   username,
   password,
-  version = "node-red-contrib-aprs 2.0"
+  version = `node-red-contrib-aprs ${VERSION}`,
 ) => {
-  if (password === undefined || password === null) {
+  if (typeof password === "undefined" || password === null) {
     password = "-1";
+  }
+  if (typeof version === "undefined" || version === null) {
+    version = `node-red-contrib-aprs ${VERSION}`;
   }
   return `user ${username} pass ${password} vers ${version}`;
 };
@@ -287,12 +295,14 @@ const formatCallsign = (value) => {
 
   if (typeof value.call !== "string") {
     throw new Error(
-      `Invalid or missing call attribute in ${JSON.stringify(value)}`
+      `Invalid or missing call attribute in ${JSON.stringify(value)}`,
     );
   }
 
   const ssid =
-    value.ssid !== undefined && value.ssid !== null ? `-${value.ssid}` : "";
+    typeof value.ssid !== "undefined" && value.ssid !== null
+      ? `-${value.ssid}`
+      : "";
   return `${value.call}${ssid}`;
 };
 
@@ -302,22 +312,25 @@ const formatPacket = (from, to, via, data) => {
     throw new Error("Missing From callsign");
   }
 
-  const t = formatCallsign(to || { call: "APRS" });
+  let toCall = typeof to !== "undefied" && to !== null ? to : { call: "APRS" };
+  const t = formatCallsign(toCall);
 
   let v;
 
-  if (typeof via === "string") {
-    v = via || "TCPIP*";
+  if (typeof via === "string" && via !== "") {
+    v = via;
   } else if (Array.isArray(via)) {
     v = via.map(formatCallsign).join(",");
-  } else if (via === undefined || via === null) {
+  } else if (typeof via === "undefined" || via === null || via === "") {
     v = "TCPIP*";
   } else {
-    throw new Error("Unsupported via type");
+    throw new Error("Unsupported Via type");
   }
 
   return `${f}>${t},${v}:${data}`;
 };
+
+let connectionPool = {};
 
 const sendPacket = (
   username,
@@ -325,7 +338,7 @@ const sendPacket = (
   packet,
   timeout = 20,
   server = "rotate.aprs2.net",
-  port = 14580
+  port = 14580,
 ) => {
   return new Promise((resolve, reject) => {
     let state = "start";
@@ -335,6 +348,7 @@ const sendPacket = (
       close();
       reject(error);
     };
+
     sock.once("error", onError);
 
     const close = () => {
@@ -351,6 +365,7 @@ const sendPacket = (
       close();
       reject(new Error("Timed out while sending APRS packet"));
     };
+
     let timer = setTimeout(onTimeout, timeout * 1000);
 
     const rl = readline.createInterface({ input: sock });
@@ -359,6 +374,7 @@ const sendPacket = (
       switch (state) {
         case "start":
           let loginPayload = `${formatLogin(username, password)}\r\n`;
+          console.log(loginPayload)
           sock.write(loginPayload);
           state = "login";
           break;
@@ -366,7 +382,7 @@ const sendPacket = (
         case "login":
           if (!line.startsWith("# logresp ")) {
             close();
-            reject(new Error("Received invalid login response from APSR-IS"));
+            reject(new Error("Received invalid login response from APSR-IS: " + line));
             return;
           }
           let payload = `${packet}\r\n`;
@@ -396,7 +412,15 @@ const sendPacket = (
     };
 
     rl.on("line", lineReader);
-    sock.connect({ host: server, port: port });
+
+    server =
+      typeof server !== "undefined" && server !== null
+        ? server
+        : "rotate.aprs2.net";
+    port = typeof port !== "undefined" && port !== null ? port : 14580;
+
+    let serverConf = { host: server, port: port };
+    sock.connect(serverConf);
   });
 };
 
@@ -405,14 +429,25 @@ const formatPosData = (payload) => {
   let lat;
   let comment = payload.comment;
 
-  lon = payload.longitude || payload.lon || payload.lng;
-  lat = payload.latitude || payload.lat;
+  if (typeof payload.longitude !== "undefined" && payload.longitude !== null) {
+    lon = payload.longitude;
+  } else if (typeof payload.lon !== "undefined" && payload.lon !== null) {
+    lon = payload.lon;
+  } else if (typeof payload.lng !== "undefined" && payload.lng !== null) {
+    lon = payload.lng;
+  }
 
-  if (lon === undefined || lon === null) {
+  if (typeof payload.latitude !== "undefined" && payload.latitude !== null) {
+    lat = payload.latitude;
+  } else if (typeof payload.lat !== "undefined" && payload.lat !== null) {
+    lat = payload.lat;
+  }
+
+  if (typeof lon === "undefined" || lon === null) {
     throw new Error("Missing longitude value");
   }
 
-  if (lat === undefined || lat === null) {
+  if (typeof lat === "undefined" || lat === null) {
     throw new Error("Missing latitude value");
   }
 

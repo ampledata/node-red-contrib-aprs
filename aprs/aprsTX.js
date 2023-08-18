@@ -1,26 +1,21 @@
 #!/usr/bin/env node
-/*
-APRS RX Node-RED Nodes.
-
-Author:: Greg Albrecht W2GMD <oss@undef.net> & Jan Janak (OK2JPR) <jan@janakj.org>
-Copyright:: Copyright 2022 Greg Albrecht
-License:: Apache License, Version 2.0
-Source:: https://github.com/ampledata/node-red-contrib-aprs
-
-Copyright 2022 Greg Albrecht
-
-Licensed under the Apache License, Version 2.0 (the 'License');
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an 'AS IS' BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+/**
+ * APRS Node-RED TX Node.
+ *
+ * Copyright Greg Albrecht and other contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the 'License');
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an 'AS IS' BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
 
 /* jslint node: true */
 /* jslint white: true */
@@ -41,21 +36,23 @@ const makeAPRSTXNode = (RED) => {
     node.to = config.to;
     node.via = config.via;
     node.server = config.server;
-    node.port = config.server;
+    node.port = config.port;
 
     node.status({ fill: "green", shape: "dot", text: "Idle" });
 
     node.on("input", (msg) => {
       node.status({ fill: "yellow", shape: "dot", text: "Transmitting" });
 
+      // console.log(msg.payload)
       const pl = typeof msg.payload === "object" ? msg.payload : {};
-      const from = pl.from || pl.name || node.from;
+      const from =
+        pl.from || pl.name || pl.call || node.from || node.call || node.user;
       const to = pl.to || node.to || "APYSNR";
-      const via = pl.via || node.via;
+      const via = pl.via || node.via || "";
 
       try {
         let data;
-        
+
         let server = node.server;
         let port = node.port;
 
@@ -91,7 +88,26 @@ const makeAPRSTXNode = (RED) => {
 
         const packet = aprsLib.formatPacket(from, to, via, data);
 
-        aprsLib.sendPacket(node.user, node.pass, packet, 20, server, port)
+        const sockConf = [node.user, node.pass, packet, 20, server, port];
+
+        if (
+          typeof msg.payload.unitTest !== "undefined" &&
+          msg.payload.unitTest !== null
+        ) {
+          this.warn({
+            unitTest: msg.payload.unitTest,
+            user: sockConf[0],
+            pass: sockConf[1],
+            packet: sockConf[2],
+            timeOut: sockConf[3],
+            server: sockConf[4],
+            port: sockConf[5],
+          });
+          node.done()
+        }
+
+        aprsLib
+          .sendPacket(...sockConf)
           .then(() => {
             node.status({ fill: "green", shape: "dot", text: "Idle" });
           })
@@ -99,7 +115,6 @@ const makeAPRSTXNode = (RED) => {
             node.status({ fill: "red", shape: "dot", text: `Error: ${error}` });
             this.error(error, msg);
           });
-
       } catch (error) {
         node.status({ fill: "red", shape: "dot", text: `Error: ${error}` });
         this.error(error, msg);

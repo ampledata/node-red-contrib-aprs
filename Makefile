@@ -1,8 +1,8 @@
 # Makefile for node-red-contrib-aprs
 #
 # Source:: https://github.com/ampledata/node-red-contrib-aprs
-# Author:: Greg Albrecht W2GMD <oss@undef.net>
-# Copyright:: Copyright 2022 Greg Albrecht
+# Author:: Greg Albrecht <oss@undef.net>
+# Copyright:: Copyright Greg Albrecht
 # License:: Apache License, Version 2.0
 #
 
@@ -30,3 +30,7 @@ jslint:
 
 pretty:
 	npx prettier --write .
+
+mkdocs:
+	pip install -r docs/requirements.txt
+	mkdocs serve

@@ -1,0 +1,73 @@
+[
+  {
+      "id": "22940198689bb3eb",
+      "type": "function",
+      "z": "6b8486ad24e16e73",
+      "name": "Create CWOP Payload",
+      "func": "// APRS TX Node uses WorldMap serialized data:\nmsg.payload = {\n    from: { call: \"CALL\", ssid: \"6\" },\n    data: {\n        latitude: 51.8355,\n        longitude: 19.228,\n        extension: { courseDeg: 239, speedMPerS: 1.543333332 },\n        weather: {\n        windGust: 4.4704,\n        temperature: 5.555555555555555,\n        rain1h: 0,\n        rain24h: 2.794,\n        rainSinceMidnight: 2.794,\n        pressure: 996.9,\n        humidity: 83,\n        luminosity: 0,\n    },\n    comment: \"Node-RED WX Station\",\n    timestamp: \"2021-01-23T18:21:00.000Z\",\n    },\n};\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 440,
+      "y": 360,
+      "wires": [
+          [
+              "0a1400452910d040"
+          ]
+      ]
+  },
+  {
+      "id": "b9806f2747e797cb",
+      "type": "inject",
+      "z": "6b8486ad24e16e73",
+      "name": "",
+      "props": [],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "x": 270,
+      "y": 360,
+      "wires": [
+          [
+              "22940198689bb3eb"
+          ]
+      ]
+  },
+  {
+      "id": "027326635c11803e",
+      "type": "comment",
+      "z": "6b8486ad24e16e73",
+      "name": "APRS CWOP Example",
+      "info": "This example creates a test weather payload, serializses it as an APRS packet, and sends it to the CWOP backbone.",
+      "x": 320,
+      "y": 320,
+      "wires": []
+  },
+  {
+      "id": "0a1400452910d040",
+      "type": "aprs tx",
+      "z": "6b8486ad24e16e73",
+      "name": "",
+      "aprsConfig": "config_node",
+      "from": "",
+      "to": "",
+      "via": "",
+      "server": "rotate.aprs2.net",
+      "port": "14580",
+      "x": 620,
+      "y": 360,
+      "wires": []
+  },
+  {
+      "id": "config_node",
+      "type": "aprs config",
+      "filter": "",
+      "user": "W2GMD",
+      "name": "W2GMD",
+      "pass": "10141"
+  }
+]
