@@ -1,0 +1,85 @@
+[
+  {
+      "id": "debug_node",
+      "type": "debug",
+      "z": "12429aacd6a32a82",
+      "name": "APRS Data Received",
+      "active": true,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 820,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "rx_node",
+      "type": "aprs rx",
+      "z": "12429aacd6a32a82",
+      "name": "Generic APRS Connection",
+      "user": "NODERE-D",
+      "url": "ws://srvr.aprs-is.net:8080",
+      "filter": "f/SUNSET/50",
+      "x": 390,
+      "y": 260,
+      "wires": [
+          [
+              "05165a405241cdb9"
+          ]
+      ]
+  },
+  {
+      "id": "b47ea626e6855dff",
+      "type": "worldmap",
+      "z": "12429aacd6a32a82",
+      "name": "",
+      "lat": "37.76",
+      "lon": "-122.4975",
+      "zoom": "",
+      "layer": "OSMG",
+      "cluster": "",
+      "maxage": "",
+      "usermenu": "show",
+      "layers": "show",
+      "panit": "false",
+      "panlock": "false",
+      "zoomlock": "false",
+      "hiderightclick": "false",
+      "coords": "none",
+      "showgrid": "false",
+      "allowFileDrop": "false",
+      "path": "/aprs",
+      "overlist": "DR,CO,RA,DN,HM",
+      "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+      "mapname": "",
+      "mapurl": "",
+      "mapopt": "",
+      "mapwms": false,
+      "x": 770,
+      "y": 260,
+      "wires": []
+  },
+  {
+      "id": "05165a405241cdb9",
+      "type": "function",
+      "z": "12429aacd6a32a82",
+      "name": "APRS 2 WorldMap",
+      "func": "const pl = msg.payload;\n\nlet name = pl.from.call;\n\nif (typeof pl.from.ssid !== \"undefined\" && pl.from.ssid !== null) {\n    name = `${name}-${pl.from.ssid}`\n}\n\nmsg.payload = {\n    ...pl.data,\n    \"name\": name,\n}\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 610,
+      "y": 260,
+      "wires": [
+          [
+              "debug_node",
+              "b47ea626e6855dff"
+          ]
+      ]
+  }
+]

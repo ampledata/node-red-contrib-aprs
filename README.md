@@ -2,9 +2,8 @@
 
 ![APRS TX Example](https://node-red-contrib-aprs.readthedocs.io/en/latest/img/screenshot-tx-example.png)
 
-[Node-RED](https://www.nodered.org) Nodes for communicating with [APRS](http://www.aprs.org/)
-using the [APRS-IS](http://www.aprs-is.net/) or Citizen Weather Observer Program ([NOAA MADIS](https://madis.ncep.noaa.gov/))
-[CWOP](http://www.wxqa.com/) networks.
+[Node-RED](https://www.nodered.org) Nodes for communicating with Automatic Packet Reporting System [APRS](http://www.aprs.org/)
+using the [APRS-IS](http://www.aprs-is.net/) or Citizen Weather Observer Program [CWOP](http://www.wxqa.com/) ([NOAA MADIS](https://madis.ncep.noaa.gov/)) networks.
 
 Available via the [Node-RED Library](https://flows.nodered.org/node/node-red-contrib-aprs).
 

@@ -1,0 +1,87 @@
+[
+  {
+      "id": "rx_node",
+      "type": "aprs rx",
+      "z": "12429aacd6a32a82",
+      "name": "Generic APRS Connection",
+      "user": "NODERE-D",
+      "url": "ws://srvr.aprs-is.net:8080",
+      "filter": "f/SUNSET/50",
+      "x": 390,
+      "y": 260,
+      "wires": [
+          [
+              "05165a405241cdb9"
+          ]
+      ]
+  },
+  {
+      "id": "05165a405241cdb9",
+      "type": "function",
+      "z": "12429aacd6a32a82",
+      "name": "APRS 2 TAK",
+      "func": "const pl = msg.payload;\n\nlet name = pl.from.call;\n\nif (typeof pl.from.ssid !== \"undefined\" && pl.from.ssid !== null) {\n    name = `${name}-${pl.from.ssid}`\n}\n\nmsg.payload = {\n    'event': {\n        '_attributes': {\n            'version': '2.0',\n            'time': new Date(Date.now()).toISOString(),\n            'start': new Date(Date.now()).toISOString(),\n            'stale': new Date(Date.now() + 500000).toISOString(),\n            'type': 'a-f-G',\n            'uid': name,\n            'how': 'm-g',\n            'access': 'Unclassified'\n        },\n        'point': {\n            '_attributes': {\n                'lat': pl.data.latitude,\n                'lon': pl.data.longitude,\n                'hae': \"999999.0\",\n                'le': \"999999.0\",\n                'ce': \"999999.0\",\n            }\n        }\n    }\n};\n\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 590,
+      "y": 260,
+      "wires": [
+          [
+              "cf621b4df7174c0c"
+          ]
+      ]
+  },
+  {
+      "id": "cf621b4df7174c0c",
+      "type": "tak",
+      "z": "12429aacd6a32a82",
+      "name": "TAK",
+      "x": 730,
+      "y": 260,
+      "wires": [
+          [
+              "ee26cfa99036bd92"
+          ],
+          [
+              "969ee95c29fbd4fd"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "ee26cfa99036bd92",
+      "type": "debug",
+      "z": "12429aacd6a32a82",
+      "name": "TAK Data",
+      "active": true,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "payload",
+      "targetType": "msg",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 880,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "969ee95c29fbd4fd",
+      "type": "udp out",
+      "z": "12429aacd6a32a82",
+      "name": "",
+      "addr": "239.2.3.1",
+      "iface": "",
+      "port": "6969",
+      "ipv": "udp4",
+      "outport": "",
+      "base64": false,
+      "multicast": "multi",
+      "x": 910,
+      "y": 260,
+      "wires": []
+  }
+]
