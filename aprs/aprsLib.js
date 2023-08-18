@@ -20,7 +20,7 @@ limitations under the License.
 /* jslint node: true */
 /* jslint white: true */
 
-const VERSION = "2.0";
+const VERSION = "3.0.0"
 const Socket = require("net").Socket;
 const readline = require("readline");
 

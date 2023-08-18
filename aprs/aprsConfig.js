@@ -20,6 +20,8 @@
 /* jslint node: true */
 /* jslint white: true */
 
+const VERSION = "3.0.0"
+
 const makeAPRSConfigNode = (RED) => {
   /**
    * APRSConfig

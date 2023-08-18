@@ -34,7 +34,8 @@ Copy & Paste the following code block into a new Flow in Node-RED:
 
 ## APRS Receive Example
 
-TK TK 
+Received APRS Frames are parsed using [aprs-parser](https://github.com/adriann0/npm-aprs-parser)
+and output as `msg.payload` JSON. 
 
 ```js
 {!examples/APRS RX Example.json!}
