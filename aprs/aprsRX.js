@@ -22,6 +22,33 @@
 
 const VERSION = "3.0.0";
 
+function payloadToText(payload) {
+  if (typeof payload === "string") {
+    return Promise.resolve(payload);
+  }
+
+  if (Buffer.isBuffer(payload)) {
+    return Promise.resolve(payload.toString("utf8"));
+  }
+
+  if (payload instanceof ArrayBuffer) {
+    return Promise.resolve(Buffer.from(payload).toString("utf8"));
+  }
+
+  if (ArrayBuffer.isView(payload)) {
+    return Promise.resolve(
+      Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength).toString("utf8"),
+    );
+  }
+
+  if (payload && typeof payload.text === "function") {
+    return payload.text();
+  }
+
+  return Promise.resolve(String(payload));
+}
+
+
 // APRSRXNode: Node for Receiving (RX) events from APRS.
 const makeRXNode = (RED) => {
   function APRSRXNode(config) {
@@ -80,6 +107,34 @@ const makeRXNode = (RED) => {
         node.send({ payload: { ...aprsFrame } });
         /*jshint +W119*/
       }
+    };
+
+    ws.onmessage = (data) => {
+      node.status({ fill: "green", shape: "dot", text: "Receiving" });
+      
+      payloadToText(data.data)
+        .then((raw) => {
+          raw = raw.trimEnd();
+      
+          if (raw.startsWith("#")) {
+            node.debug(raw);
+        
+            if (raw.includes("verified")) {
+              node.status({ fill: "blue", shape: "dot", text: "Connected" });
+            }
+    
+            return;
+          }
+    
+          let aprsFrame = aprsParser.parse(raw);
+        
+          /*jshint -W119*/
+          node.send({ payload: { ...aprsFrame } });
+          /*jshint +W119*/
+        })
+        .catch((err) => {
+          node.error(err);
+        });
     };
 
     ws.onclose = (evt) => {
